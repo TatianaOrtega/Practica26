@@ -1,4 +1,16 @@
 
+@extends('layouts.app')
+<br> 
+ <div class="row justify-content-end">
+    <div class="col-2">
+    <form method="post" action="{{ url('/') }}">
+        @csrf
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Salir</button>
+    </form>
+</div>
+
+</div>
+<div class="col-lg-3 m-auto">
 <form method="post" action="{{url('/curso')}}">
   @csrf
   @if( Session::has('mensaje'))
@@ -19,3 +31,4 @@
   <input type="hidden" id="id_creador" name="id_creador" value ="{{ Session::get('id')}}"><br>  
     <button type="submit" class="btn btn-primary" style="padding-left: 2.5rem; padding-right: 2.5rem;">Guardar</button>
 </form>
+<div class="col-lg-3 m-auto">

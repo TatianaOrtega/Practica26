@@ -1,11 +1,21 @@
-    Suscripcion de Cursos Activos
+    
+ @extends('layouts.app')
+ <br> 
+ <div class="row justify-content-end">
+    <div class="col-2">
+    <form method="post" action="{{ url('/') }}">
+        @csrf
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Salir</button>
+    </form>
+</div>
+</div>
 
+<div class="container">
+<h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Suscripcion de Cursos Activos</h3>
 @if(Session::has('mensaje'))
 {{ Session::get('mensaje')}}
 @endif
-
-<div class="container">
-
+<br>
 <table class="table table-light">
     <thead class="thead-light">
         <tr>
@@ -34,10 +44,10 @@
             <td>{{ $estado }}</td>  
             <td>
                 @if($estado == "Suscrito")
-                <label>Activo</label>
+                <label>Suscrito</label>
                 @else
                 
-                <button type="submit"  value="Suscrito" name="estado">Suscribirse</button>
+                <button type="submit" class="btn btn-primary" value="Suscrito" name="estado">Suscribirse</button>
 
                 @endif
                 <input type="hidden" id="id_curso" name="id_curso" value="{{ $suscribir->id_curso}}">

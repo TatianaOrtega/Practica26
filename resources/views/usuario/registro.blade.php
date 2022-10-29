@@ -1,5 +1,5 @@
 
-
+@extends('layouts.app')
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
     <a class="navbar-brand">Aplicativo Suscripciones</a>    
     
@@ -10,16 +10,22 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('curso')}}">Administrar</a>
         </li>   
-        </ul>
-        
-    </nav>
+        </ul>        
+</nav>
+ <div class="row justify-content-end">
+    <div class="col-2">
+    <form method="post" action="{{ url('/') }}">
+        @csrf
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Salir</button>
+    </form>
+</div>
+</div>
 @if(Session::has('mensaje'))
 {{ Session::get('mensaje')}}
 @endif
 <div class="col-lg-3 m-auto">
 <form method="post" action="{{url('/registro')}}">
   @csrf
-<br> 
 <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Registrar Usuario</h3>
   <div class="form-group">   
     <label for="nombres">Nombre y Apellido</label>
@@ -39,7 +45,8 @@
         <option value="CREAD">CREADOR</option>
         <option value="CONSU">CONSUMIDOR</option>        
       </select>
-  </div>    
+  </div>
+    <br>    
     <button type="submit" class="btn btn-primary" style="padding-left: 2.5rem; padding-right: 2.5rem;">Registrar</button>
 </form>
 </div>

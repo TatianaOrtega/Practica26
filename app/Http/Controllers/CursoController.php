@@ -86,7 +86,7 @@ class CursoController extends Controller
 
         //Actualiza el estado en la BD
         Curso::where('id_curso', '=', $id_curso)->update(['estado' => $estado]);
-        return redirect('curso')->with('mensaje','Cambio de estado con exito');
+        return redirect('curso');
     }
 
     /**
