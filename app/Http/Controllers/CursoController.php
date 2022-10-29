@@ -16,7 +16,7 @@ class CursoController extends Controller
     {
         //Obtiene los creadores y cursos
         
-        $datos['cursos'] = Curso::paginate(5);
+        $datos['cursos'] = Curso::paginate(15);
         return view('curso.administrar',$datos);
 
     }

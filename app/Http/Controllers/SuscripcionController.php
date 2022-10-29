@@ -40,15 +40,38 @@ class SuscripcionController extends Controller
     {
         //Obtiene los datos de la suscripcion exceptuando token 
         $datos = request()->except('_token');
+        $idUsuario = $datos['id_consumidor'];
+        $idCurso = $datos['id_curso'];
         
-        //Inserta en BD la nueva suscripcion recibida
-        ///////////Hacer updte insert o cambira botones///////////
-        Suscripcion::insert($datos);
+        $consulta = "select count(*) cant
+                    from suscripcions s
+                    where s.id_curso in (select c.id_curso
+                                        from cursos c
+                                        where c.id_creador = (select cu.id_creador 
+                                                            from cursos cu
+                                                            where cu.id_curso =".$idCurso." )) 
+                    and s.id_consumidor = ".$idUsuario;
+            
+        $resultado = DB::select($consulta);
+        //$cant=0;
+        foreach($resultado as $results){
+            $cantidad = $results->cant;
+        }
 
+        //$cantidad = $resultado->cant;
+        $mensaje = "Suscripcion realizada con exito";
+
+        //Valida que no exista el registro en la tabla suscripcion
+        if($cantidad == 0){
+            //Inserta en BD la nueva suscripcion recibida
+            Suscripcion::insert($datos);
+        }
+        //Caso contrario no registra la suscripcion y muestra mensaje
+        else{
+            $mensaje = "No puede suscribirse, ya existe una suscripcion con el mismo creador";
+        }
         //Redirecciona al index con el mensaje de exito
-        return redirect('suscripcion')->with('mensaje','Suscripcion realizada con exito');
-
-        //return response()->json($datos);
+        return redirect('suscripcion/'.$idUsuario )->with('mensaje',$mensaje);
     }
 
     /**
@@ -62,11 +85,12 @@ class SuscripcionController extends Controller
         //Recupera los cursos, creador, estado(suscripciones), id_consumidor
         //Para mostrarlos en la vista de suscripciones
         //Asi el consumidor puede verificar si esta suscrito
-        $consulta = "SELECT c.nombre, u.nombres, c.id_curso id_curso,
+        $consulta = "select c.nombre, u.nombres, c.id_curso,
                     ".$idUsuario." id_consumidor, 
-                      nvl((select s.estado from suscripcions s
+                      nvl((select  s.id_suscripcion from suscripcions s
                            where s.id_curso = c.id_curso 
-                           and s.id_consumidor =".$idUsuario." ),'NA') suscripcion 
+                           and s.estado = 'Suscrito'
+                           and s.id_consumidor =".$idUsuario." ),'NA') id_suscripcion 
                       FROM cursos c, usuarios u
                       WHERE c.id_creador = u.id_usuario
                        AND c.estado ='Activo'" ;
@@ -109,8 +133,11 @@ class SuscripcionController extends Controller
      * @param  \App\Models\Suscripcion  $suscripcion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Suscripcion $suscripcion)
+    public function destroy($id_suscripcion)
     {
+        //Elimina el registro de la suscripcion
+        Suscripcion::destroy($id_suscripcion);
         //
+        //return redirect('suscripcion/'.$idUsuario )->with('mensaje','Suscripcion realizada con exito');
     }
 }
